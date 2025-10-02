@@ -30,6 +30,11 @@ app.use('/api/products', ProductRoute)
 app.use('/api/order', OrderRoute)
 app.use('/api/users', UserRoute)
 
+// Add root route
+app.get("/", (req, res) => {
+  res.send("✅ Backend is running... Welcome to Maris Toys API!");
+})
+
 // configure server to start static file
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
