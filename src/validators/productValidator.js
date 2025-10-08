@@ -12,9 +12,10 @@ const createProduct = Joi.object({
    })
 
    const updateProduct = Joi.object({
+    name: Joi.string().required(),
     price: Joi.number().required(),
     stock: Joi.number().required(),
-    name: Joi.string()
+ 
    })
 // {name, price, category, ageRange, skills, stock, rating, description }
 export {createProduct, updateProduct}

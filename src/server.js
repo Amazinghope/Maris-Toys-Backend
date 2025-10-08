@@ -2,11 +2,13 @@ import express from 'express'
 import morgan from 'morgan'
 import dotenv from 'dotenv'
 import cors from 'cors'
+import cookieParser from 'cookie-parser'
 import { fileURLToPath } from 'url'
 import path from  'path'
 import { dbConnect } from './config/dbConnection.js'
 import ProductRoute from './routes/product.js'
 import OrderRoute  from './routes/order.js'
+import AuthRoute from './routes/auth.js'
 import UserRoute from './routes/users.js'
 
 
@@ -20,6 +22,10 @@ if (process.env.ENV === 'development'){
 }
 
 app.use(express.json())
+// app.use(express.urlencoded({ extended: true }));
+
+app.use(cookieParser())
+
 app.use(cors({
   origin: "http://localhost:5174", // frontend URL
   credentials: true, // allow cookies
@@ -28,7 +34,9 @@ app.use(cors({
 //Defining  Endpoint route
 app.use('/api/products', ProductRoute)
 app.use('/api/order', OrderRoute)
+app.use('/api/auth', AuthRoute)
 app.use('/api/users', UserRoute)
+
 
 // Add root route
 app.get("/", (req, res) => {

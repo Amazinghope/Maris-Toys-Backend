@@ -7,8 +7,8 @@ import updateProduct from '../controllers/Products/updateProduct.js';
 import upload from '../middleware/uploads.js';
 const router = express.Router();
 
-router.get("/all-products",authorizeUser, getAllProducts)
+router.get("/all-products", authorizeUser, getAllProducts)
 router.get("/get-single-product/:id", authorizeUser, getSingleProduct)
 router.post("/create-product", authorizeUser, checkRole('admin'), upload.single('image'), createProduct)
-router.patch("/update-product", authorizeUser, checkRole('admin'), updateProduct)
+router.patch("/update-product/:id", authorizeUser, checkRole('admin'), updateProduct)
 export default router
