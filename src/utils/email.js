@@ -15,6 +15,10 @@ export const createTransporter = () => {
  */
 export const sendOtpEmail = async (toEmail, otp) => {
   try {
+    console.log("BREVO_API_KEY:", process.env.BREVO_API_KEY ? "Loaded" : "Missing");
+console.log("BREVO_SENDER_EMAIL:", process.env.BREVO_SENDER_EMAIL);
+console.log("🔑 Using Brevo API Key:", process.env.BREVO_API_KEY?.slice(0, 10) + "...");
+
     const apiInstance = new brevo.TransactionalEmailsApi();
     apiInstance.setApiKey(
       brevo.TransactionalEmailsApiApiKeys.apiKey,
@@ -43,7 +47,7 @@ export const sendOtpEmail = async (toEmail, otp) => {
     console.log("✅ OTP email sent successfully via Brevo");
     return true;
   } catch (error) {
-    console.error("❌ Failed to send OTP email:", error.message);
+    console.error("❌ Failed to send OTP email:", error.response?.text || error.message);
     throw new Error("Failed to send OTP email. Please try again later.");
   }
 };
