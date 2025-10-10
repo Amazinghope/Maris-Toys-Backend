@@ -66,6 +66,7 @@ const login = async (req, res) => {
       status: "Success",
       message: "OTP sent successfully to your email",
       tempToken,
+      userId: userExists._id
     });
   } catch (err) {
     console.error(err);
