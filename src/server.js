@@ -66,6 +66,10 @@ app.get("/", (req, res) => {
   res.send("✅ Backend is running... Welcome to Maris Toys API!");
 })
 
+app.get("/api/health", (req, res) => {
+  res.json({ status: "UP" });
+});
+
 // configure server to start static file
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
