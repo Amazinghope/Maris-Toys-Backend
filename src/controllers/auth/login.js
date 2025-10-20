@@ -8,7 +8,7 @@ import { createAndSaveOtp } from "../../utils/generateOtp.js";
 
 const login = async (req, res) => {
   try {
-    // 1. Validate request body
+    //  Validate request body
     const { error } = loginvalidationSchema.validate(req.body);
     if (error) {
       return res.status(httpStatus.BAD_REQUEST).json({
@@ -17,10 +17,10 @@ const login = async (req, res) => {
       });
     }
 
-    // 2. Extract data
+    //  Extract data
     const { email, password } = req.body;
 
-    // 3. Check if user exists
+    //  Check if user exists
     const userExists = await User.findOne({ email });
     if (!userExists) {
       return res.status(httpStatus.NOT_FOUND).json({
@@ -29,7 +29,7 @@ const login = async (req, res) => {
       });
     }
 
-    // 4. Validate password
+    //  Validate password
     const isPasswordValid = await bcrypt.compare(password, userExists.password);
     if (!isPasswordValid) {
       return res.status(httpStatus.BAD_REQUEST).json({
@@ -38,7 +38,7 @@ const login = async (req, res) => {
       });
     }
 
-    // 5. Generate and send OTP
+    //  Generate and send OTP
     const { otp } = await createAndSaveOtp(
       userExists._id,
       Number(process.env.OTP_EXPIRE_MINUTES || 10)
@@ -54,14 +54,23 @@ const login = async (req, res) => {
       });
     }
 
-    // 6. Create temporary token for OTP session
+    //  Create temporary token for OTP session
     const tempToken = jwt.sign(
       { sub: userExists._id.toString(), type: "otp" },
       process.env.JWT_SECRET,
       { expiresIn: "15m" }
     );
 
-    // 7. Respond to user
+    //Save tempToken in a cookie (instead of localStorage)
+  res.cookie("tempToken", tempToken, {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax",
+  maxAge: 15 * 60 * 1000, // 15 minutes
+});
+
+
+    //  Respond to user
     return res.status(httpStatus.OK).json({
       status: "Success",
       message: "OTP sent successfully to your email",

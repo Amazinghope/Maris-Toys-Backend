@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 import httpStatus from 'http-status'
+import User from '../models/user.js';
 
 // const authorizeUser = (req, res, next) => {
 //     // Check if token is provided in the headers
@@ -31,40 +32,74 @@ import httpStatus from 'http-status'
 //     }
 // };
 
-const authorizeUser = (req, res, next) => {
-  // Try to get token from cookie or header
-  const token =
-    req.cookies?.token ||
-    (req.headers.authorization &&
-      req.headers.authorization.startsWith("Bearer ") &&
-      req.headers.authorization.split(" ")[1]);
+// const authorizeUser = (req, res, next) => {
+//   // Try to get token from cookie or header
+//   const token =
+//     req.cookies?.token ||
+//     (req.headers.authorization &&
+//       req.headers.authorization.startsWith("Bearer ") &&
+//       req.headers.authorization.split(" ")[1]);
 
-  if (!token) {
-    return res.status(httpStatus.UNAUTHORIZED).json({
-      status: "Unauthorized",
-      message: "Token not provided!",
-    });
-  }
+//   if (!token) {
+//     return res.status(httpStatus.UNAUTHORIZED).json({
+//       status: "Unauthorized",
+//       message: "Token not provided!",
+//     });
+//   }
 
+//   try {
+//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//     req.user = decoded;
+//     next();
+//   } catch (error) {
+//     let message = "Invalid or expired token";
+//     if (error.name === "TokenExpiredError") {
+//       message = "Token expired";
+//     } else if (error.name === "JsonWebTokenError") {
+//       message = "Invalid token";
+//     }
+
+//     return res.status(httpStatus.UNAUTHORIZED).json({
+//       status: "Error",
+//       message,
+//     });
+//   }
+// };
+
+ const authorizeUser = async (req, res, next) => {
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-    next();
-  } catch (error) {
-    let message = "Invalid or expired token";
-    if (error.name === "TokenExpiredError") {
-      message = "Token expired";
-    } else if (error.name === "JsonWebTokenError") {
-      message = "Invalid token";
+    // Get token from cookie first
+    const token =
+      req.cookies?.token ||
+      (req.headers.authorization?.startsWith("Bearer ") &&
+        req.headers.authorization.split(" ")[1]);
+
+    if (!token) {
+      return res.status(httpStatus.UNAUTHORIZED).json({
+        message: "No token, authorization denied",
+      });
     }
 
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Find user by ID in DB
+    const user = await User.findById(decoded.id).select("-password");
+    if (!user) {
+      return res.status(httpStatus.UNAUTHORIZED).json({
+        message: "User not found",
+      });
+    }
+
+    req.user = user; // attach user to request
+    next();
+  } catch (err) {
+    console.error("Auth error:", err.message);
     return res.status(httpStatus.UNAUTHORIZED).json({
-      status: "Error",
-      message,
+      message: "Invalid or expired token",
     });
   }
 };
-
 const checkRole = (...allowedRoles) => {
     return (req, res, next) => {
         // Check if user role is provided and is within allowed roles

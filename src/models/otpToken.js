@@ -17,6 +17,10 @@ const otpTokenSchema = new mongoose.Schema({
    type: String,
    required: true,
   },
+  used: {
+    type: Boolean,
+    default: false    // ✅ crucial for finding valid OTPs
+  },
 
   createdAt: {
     type: Date,

@@ -42,6 +42,12 @@ const orderSchema = new mongoose.Schema({
         default: false
     },
 
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", // link recipe to User model
+      required: true,
+    },
+
     status: {
         type: String,
         default: "pending" // pending, processing, shipped, completed

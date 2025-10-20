@@ -4,7 +4,12 @@ import  httpStatus from 'http-status'
 // controller to get all products
 const getAllProducts = async (req, res) => {
     try {
-    const allProducts = await Product.find()
+      const {ageRange} = req.query
+      let query = {}
+      if(ageRange){
+        query.ageRange = ageRange
+      }
+    const allProducts = await Product.find(query)
     if(allProducts){
          res.status(httpStatus.OK).json({
         status: 'success',

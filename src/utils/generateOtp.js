@@ -7,6 +7,7 @@ import OtpToken from '../models/otpToken.js'
 }
 
 export const createAndSaveOtp = async(userId, expireMinutes = 10) =>{
+    
 // invalidates previous used Otps for the user
 await OtpToken.updateMany({
     userId, 
@@ -15,6 +16,7 @@ await OtpToken.updateMany({
 {
     used: true
 }
+
 )
  const otp = generateNumericOtp()
  const otpHash = await bcrypt.hash(otp, 10);
@@ -24,7 +26,14 @@ await OtpToken.updateMany({
     userId,
     otp: otpHash,         // field name must match schema
     expiredAt: expiresAt, // field name must match schema
+    used: false
  })
+ // 🧠 Add these logs to confirm OTP is saved
+  console.log("✅ OTP created for user:", userId);
+  console.log("🔢 OTP (plain):", otp);
+  console.log("💾 OTP document saved:", doc);
+
 
  return {otp, doc}
+ 
 }
