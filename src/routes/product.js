@@ -9,7 +9,7 @@ import deleteProduct from '../controllers/Products/deleteProduct.js';
 
 const router = express.Router();
 //upload.single('image'),
-router.get("/all-products", authorizeUser, getAllProducts)
+router.get("/all-products",  getAllProducts)
 router.get("/get-single-product/:id", authorizeUser, getSingleProduct)
 router.post("/create-product", authorizeUser, checkRole('admin'),  createProduct)
 router.patch("/update-product/:id", authorizeUser, checkRole('admin'), updateProduct)
