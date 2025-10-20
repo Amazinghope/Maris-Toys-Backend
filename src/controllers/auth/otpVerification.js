@@ -76,8 +76,8 @@ export const verifyOtp = async (req, res) => {
     res.cookie("token", loginToken, {
       httpOnly: true,                               // not accessible via JS
       secure: process.env.NODE_ENV === "production", // only over HTTPS in production
-      sameSite: "lax",                              // protect against CSRF
-      maxAge: 7 * 24 * 60 * 60 * 1000,              // 7 days
+     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // protect against CSRF
+      maxAge: 7 * 24 * 60 * 60 * 1000,   // 7 days
     });
 
     //  Respond with success excluding password
@@ -100,40 +100,4 @@ export const verifyOtp = async (req, res) => {
   }
 };
 
-// import User from "../../models/user.js";
-// import OtpToken from "../../models/otpToken.js";
-// import httpStatus from "http-status";
 
-// export const verifyOtp = async (req, res) => {
-//   try {
-//     const { userId, otp } = req.body;
-
-//     const otpRecord = await OtpToken.findOne({ userId, otp });
-//     if (!otpRecord)
-//       return res.status(httpStatus.BAD_REQUEST).json({
-//         status: "Error",
-//         message: "Invalid OTP",
-//       });
-
-//     if (otpRecord.expiredAt < new Date()) {
-//       await OtpToken.deleteOne({ _id: otpRecord._id });
-//       return res.status(httpStatus.BAD_REQUEST).json({
-//         status: "Error",
-//         message: "OTP expired",
-//       });
-//     }
-
-//     await User.findByIdAndUpdate(userId, { isVerified: true });
-//     await OtpToken.deleteOne({ _id: otpRecord._id });
-
-//     return res.status(httpStatus.OK).json({
-//       status: "Success",
-//       message: "Account verified successfully",
-//     });
-//   } catch (err) {
-//     res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-//       status: "Error",
-//       message: err.message,
-//     });
-//   }
-// };
