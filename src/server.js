@@ -62,13 +62,19 @@ app.use('/api/users', UserRoute)
 
 
 // Add root route
+// Health check route for uptime monitoring
+app.get("/api/health", (req, res) => {
+  res.status(200).json({
+    status: "UP",
+    message: "Backend server is healthy and running smoothly.",
+    timestamp: new Date().toISOString(),
+  });
+});
+
 app.get("/", (req, res) => {
   res.send("✅ Backend is running... Welcome to Maris Toys API!");
 })
 
-app.get("/api/health", (req, res) => {
-  res.json({ status: "UP" });
-});
 
 // configure server to start static file
 const __filename = fileURLToPath(import.meta.url)
