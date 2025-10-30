@@ -2,6 +2,7 @@ import User from "../../models/user.js";
 import { createAndSaveOtp } from "../../utils/generateOtp.js";
 import httpStatus from "http-status";
 import { sendOtpEmail } from "../../utils/email.js";
+import jwt from "jsonwebtoken";
 
 export const resendOtp = async (req, res) => {
   try {
@@ -15,6 +16,21 @@ export const resendOtp = async (req, res) => {
         message: "User not found!",
       });
     }
+    
+
+const tempToken = jwt.sign(
+  { sub: user._id, email: user.email },
+  process.env.JWT_SECRET,
+  { expiresIn: "10m" } // valid for 10 minutes
+);
+
+res.cookie("tempToken", tempToken, {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  maxAge: 10 * 60 * 1000, // 10 minutes
+});
+
 
     // 2️⃣ Generate a new OTP
     const { otp } = await createAndSaveOtp(userId);
@@ -24,7 +40,7 @@ export const resendOtp = async (req, res) => {
     console.log(`📩 New OTP for ${user.email}: ${otp}`);
 
     // Optionally send by email:
-    await sendOtpEmail(user.email, "Your New OTP", `Your verification code is ${otp}`);
+    await sendOtpEmail(user.email, otp);
 
     // 4️⃣ Respond success
     return res.status(httpStatus.OK).json({

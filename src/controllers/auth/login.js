@@ -68,6 +68,7 @@ const login = async (req, res) => {
  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   maxAge: 15 * 60 * 1000, // 15 minutes
 });
+console.log("🔧 Setting tempToken cookie:", res.getHeaders()["set-cookie"]);
 
 
     //  Respond to user

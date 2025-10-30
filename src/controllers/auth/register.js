@@ -27,7 +27,7 @@ import jwt from "jsonwebtoken"
      });
 
      if(emailExist){
-        res.status(httpStatus.BAD_REQUEST).json({
+      return  res.status(httpStatus.BAD_REQUEST).json({
             status: 'Error',
             message: 'User with Email already exist'
         });
@@ -38,7 +38,7 @@ import jwt from "jsonwebtoken"
      });
 
      if(userNameExist){
-     res.status(httpStatus.BAD_REQUEST).json({
+   return  res.status(httpStatus.BAD_REQUEST).json({
         status: 'Error',
         message: 'UserName already exist'
      });
@@ -63,7 +63,7 @@ import jwt from "jsonwebtoken"
     //  const token = signToken()
 
      // Send a response (as view after registration)
-     res.status(httpStatus.CREATED).json({
+  return   res.status(httpStatus.CREATED).json({
         status: 'Success',
         message: 'User registration successful',
         userDetails: createdUser,
@@ -84,7 +84,7 @@ import jwt from "jsonwebtoken"
     //     }
     //  }) 
     }catch(err){
-     res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+  return   res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
         status: 'Error',
         message: 'An error occurred while registering user',
         err: err.message,

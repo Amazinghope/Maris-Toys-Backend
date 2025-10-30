@@ -1,64 +1,87 @@
-// import { required, string } from "joi";
 import mongoose from "mongoose";
 
-const orderProductSchema = new mongoose.Schema({
-   product:{
+const orderItemSchema = new mongoose.Schema({
+  product: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Product",
-    required: true
-   },
-   name: String,
-   price: Number,
-   qty: Number,
-   image: String,    
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
+  qty: {
+    type: Number,
+    required: true,
+  },
+  image: {
+    type: String,
+    default: "",
+  },
 });
 
-const shippingSchema = new mongoose.Schema({
-    firstName: String,
-    lastName: String,
-    email: String,
-    phone: String,
-    address: String,
-    city: String,
-
-})
-
-const orderSchema = new mongoose.Schema({
-    items: [orderProductSchema],
-    shippingAddress: shippingSchema,
-   
-    paymentMethod:{
+const shippingAddressSchema = new mongoose.Schema({
+  fullName: {
     type: String,
-    default: "cod" // card / transfer/ cod
-    },
+    required: true,
+  },
+  postalCode: {
+    type: String,
+    required: true,
+  },
+  address: {
+    type: String,
+    required: true,
+  },
+  city: {
+    type: String,
+    required: true,
+  },
+  phone: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+  },
+  state: {
+    type: String,
+    required: true,
+  }
+});
 
-    totalPrice: {
-        type: Number,
-        required: true
-    },
-
-    isPaid: {
-        type: Boolean,
-        default: false
-    },
-
+const orderSchema = new mongoose.Schema(
+  {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // link recipe to User model
+      ref: "User",
       required: true,
     },
-
-    status: {
-        type: String,
-        default: "pending" // pending, processing, shipped, completed
+    items: [orderItemSchema],
+    shippingAddress: shippingAddressSchema,
+    paymentMethod: {
+      type: String,
+      required: true,
+      enum: ["Bank Transfer", "Pay on Delivery", "Card Payment"], // optional
     },
-
-},
-
-{
-   timestamps: true 
-}
+    totalPrice: {
+      type: Number,
+      required: true,
+    },
+    deliveryStatus: {
+      type: String,
+      enum: ["Pending", "Paid", "Shipped", "Delivered", "Cancelled"],
+      default: "Pending",
+    },
+  },
+  { timestamps: true }
 );
 
-const Order = mongoose.model("Order", orderSchema)
-export  default Order
+const Order = mongoose.model("Order", orderSchema);
+export default Order;
+
