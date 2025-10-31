@@ -112,9 +112,12 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 dbConnect().then(() =>{
     console.log("Database sucessfuly connected")
-   app.listen(PORT, () => {
-    console.log(`server running at port: ${PORT}`)
-   })
+  //  app.listen(PORT, () => {
+  //   console.log(`server running at port: ${PORT}`)
+  //  })
+   httpServer.listen(PORT, () => {
+    console.log(`🚀 Server running with Socket.IO at port: ${PORT}`);
+  });
 }).catch((error) => {
     console.log(`An error occured while connecting to database: ${error}`)
    })
