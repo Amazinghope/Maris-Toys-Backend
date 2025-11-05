@@ -8,7 +8,7 @@ const createProduct = Joi.object({
    skills: Joi.array().items(Joi.string()).required(),
    stock: Joi.number().required(),
    description: Joi.string().required(),
-   rating: Joi.number(),
+   
    })
 
    const updateProduct = Joi.object({

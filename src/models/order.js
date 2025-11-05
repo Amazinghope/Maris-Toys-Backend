@@ -73,6 +73,18 @@ const orderSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    vat: {
+      type: Number,
+      default: 0,
+    },
+    shippingFee: {
+      type: Number,
+      default: 0,
+    },
+    grandTotal: {
+      type: Number,
+      default: 0,
+    },
     deliveryStatus: {
       type: String,
       enum: ["Pending", "Paid", "Shipped", "Delivered", "Cancelled"],

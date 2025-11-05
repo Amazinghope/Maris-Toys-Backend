@@ -23,7 +23,7 @@ export const createOrder = async (req, res, next) => {
       });
     }
 
-    const { items, shippingAddress, paymentMethod } = req.body;
+    const { items, shippingAddress, vat, paymentMethod, grandTotal, shippingFee } = req.body;
  console.log("🧩 Items being sent:", items);
 
     if (!items || !Array.isArray(items) || items.length === 0) {
@@ -55,6 +55,9 @@ export const createOrder = async (req, res, next) => {
       items: orderItems,
       shippingAddress,
       paymentMethod,
+      shippingFee,
+      vat,
+      grandTotal,
       totalPrice,
       deliveryStatus: "Pending",
     });
