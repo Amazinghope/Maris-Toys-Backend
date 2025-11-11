@@ -30,7 +30,13 @@ const userSchema = new mongoose.Schema({
     enum:['regular', 'admin'],
     default: 'regular'
  },
-
+ isOnline: {
+    type: Boolean,
+     default: false
+    },
+isVerified: {
+    type: Boolean,
+    default: false },
 },
 {timestamps: true}
 )

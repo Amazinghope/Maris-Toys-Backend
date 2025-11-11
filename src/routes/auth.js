@@ -6,6 +6,7 @@ import { resendOtp } from '../controllers/auth/resendOtp.js'
 import { authorizeUser, checkRole } from '../middleware/auth.js'
 import { logout } from '../controllers/auth/logOut.js'
 import { getMe } from '../controllers/auth/getMe.js'
+
 const router = express.Router()
 
 router.post('/register', registerUser)

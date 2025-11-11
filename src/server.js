@@ -13,6 +13,7 @@ import OrderRoute  from './routes/order.js'
 import AuthRoute from './routes/auth.js'
 import UserRoute from './routes/users.js'
 import MessageRoute from './routes/messages.js'
+import ContactRoute from './routes/contact.js'
 
 const app = express()
 dotenv.config()
@@ -22,16 +23,35 @@ const PORT = process.env.PORT || 4000;
 const httpServer = http.createServer(app)
 
 //Socket.IO
+// const io = new Server(httpServer, {
+//   cors: {
+//     origin: [
+//        "http://localhost:5173",
+//       "http://localhost:5174",
+//       "https://maris-toys-frontend.onrender.com",
+//     ],
+//     credentials: true
+//   }
+// })
+
 const io = new Server(httpServer, {
   cors: {
     origin: [
-       "http://localhost:5173",
+      "http://localhost:5173",
       "http://localhost:5174",
       "https://maris-toys-frontend.onrender.com",
     ],
-    credentials: true
-  }
-})
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+   pingTimeout: 30000, // 30 seconds
+
+  transports: ["websocket", "polling"], // ✅ explicitly set transports
+});
+io.engine.on("connection_error", (err) => {
+  console.error("❌ Socket.IO connection error:", err.code, err.message);
+});
+
 
 // Socket.IO logic
 io.on('connection', (socket) => {
@@ -85,6 +105,7 @@ app.use('/api/order', OrderRoute)
 app.use('/api/auth', AuthRoute)
 app.use('/api/users', UserRoute)
 app.use('/api/messages', MessageRoute)
+app.use('/contact', ContactRoute)
 
 
 // Add root route

@@ -38,6 +38,8 @@ const login = async (req, res) => {
       });
     }
 
+  
+
     //  Generate and send OTP
     const { otp } = await createAndSaveOtp(
       userExists._id,

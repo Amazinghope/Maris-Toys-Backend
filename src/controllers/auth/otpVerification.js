@@ -56,12 +56,28 @@ export const verifyOtp = async (req, res) => {
     }
 
     //  Mark user as verified
-    const user = await User.findByIdAndUpdate(
-      userId,
-      { isVerified: true },
-      { new: true },
+    // const user = await User.findByIdAndUpdate(
+    //   userId,
+    //   { isVerified: true, isOnline:true},
+    //   { new: true },
       
-    );
+    // );
+
+    // ✅ Mark user as verified and online
+let user = await User.findByIdAndUpdate(userId);
+if (!user) {
+  return res.status(404).json({
+    status: "Error",
+    message: "User not found during OTP verification",
+  });
+}
+
+user.isVerified = true;
+user.isOnline = true;
+await user.save();
+
+console.log(" User verified and online:", user);
+
 
     //  mark as used
     await OtpToken.updateOne({ _id: otpRecord._id }, {used: true});
