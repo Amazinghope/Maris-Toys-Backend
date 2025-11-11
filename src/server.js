@@ -89,6 +89,7 @@ const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
   "https://maris-toys-frontend.onrender.com",
+  "https://my-portfolio-1-li48.onrender.com",
 ];
 
 app.use(
